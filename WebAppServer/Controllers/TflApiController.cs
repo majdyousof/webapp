@@ -8,12 +8,8 @@ namespace WebAppServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class NewApiController : ControllerBase
+    public class TflApiController : ControllerBase
     {
-        [HttpGet(Name = "GetNewApi")]
-        public string GetNewApi()
-        {
-            return "Hello from NewApiController!";
-        }
+        
     }
 }
