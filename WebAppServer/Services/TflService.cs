@@ -38,7 +38,7 @@ namespace WebAppServer.Services
         public TflService(IConfiguration configuration, HttpClient httpClient)
         {
             _configuration = configuration;
-            _apiKey = "734daf3467c64b71a2149cd4646333b8";
+            _apiKey = _configuration["ApiKeys:Tfl"];
             _httpClient = httpClient;
         }
 
