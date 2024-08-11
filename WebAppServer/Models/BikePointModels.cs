@@ -1,10 +1,5 @@
 namespace WebAppServer.Models
 {
-
-    public class BikePoints
-    {
-        public required List<Place> places { get; set; }
-    }
     public class Place
     {
         public string id { get; set; }

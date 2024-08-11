@@ -1,54 +1,49 @@
 using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using WebAppServer.Models;
 
 namespace WebAppServer.Services
 {
     /// <summary>
-    /// Represents the interface for the TFL (Transport for London) service.
+    /// Represents a service for retrieving data from the Transport for London (TFL) API.
     /// </summary>
     public interface ITflService
     {
         /// <summary>
-        /// Retrieves accident data from the TFL API.
+        /// Retrieves a list of accident statistics details from the TFL API.
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the accident data as a string.</returns>
-        Task<string> GetAccidentData();
-    
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="AccidentStatsDetail"/>.</returns>
+        Task<List<AccidentStatsDetail>> GetAccidentData();
+
         /// <summary>
-        /// Retrieves bike point data from the TFL API.
+        /// Retrieves a list of bike points from the TFL API.
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the bike point data as a string.</returns>
-        Task<string> GetBikePoint();
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="Place"/>.</returns>
+        Task<List<Place>> GetBikePoint();
     }
 
     /// <summary>
-    /// Represents the implementation of the TFL (Transport for London) service.
+    /// Represents a service for retrieving data from the Transport for London (TFL) API.
     /// </summary>
     public class TflService : ITflService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
-        string _apiKey;
+        private string _apiKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TflService"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration object used to retrieve the API key.</param>
+        /// <param name="configuration">The configuration object used to retrieve the TFL API key.</param>
         /// <param name="httpClient">The HTTP client used to make API requests.</param>
         public TflService(IConfiguration configuration, HttpClient httpClient)
         {
             _configuration = configuration;
-            _apiKey = _configuration["ApiKeys:Tfl"];
+            _apiKey = "734daf3467c64b71a2149cd4646333b8";
             _httpClient = httpClient;
         }
 
-        /// <summary>
-        /// Retrieves accident data from the TFL API.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the accident data as a string.</returns>
-        public async Task<string> GetAccidentData()
+        /// <inheritdoc/>
+        public async Task<List<AccidentStatsDetail>> GetAccidentData()
         {
             // Make API request using the HttpClient
             _httpClient.DefaultRequestHeaders.Add("app_key", _apiKey);
@@ -56,8 +51,7 @@ namespace WebAppServer.Services
 
             if (response.IsSuccessStatusCode)
             {
-                string data = await response.Content.ReadAsStringAsync();
-                return data;
+                return await response.Content.ReadFromJsonAsync<List<AccidentStatsDetail>>();
             }
             else
             {
@@ -65,11 +59,8 @@ namespace WebAppServer.Services
             }
         }
 
-        /// <summary>
-        /// Retrieves bike point data from the TFL API.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the bike point data as a string.</returns>
-        public async Task<string> GetBikePoint()
+        /// <inheritdoc/>
+        public async Task<List<Place>> GetBikePoint()
         {
             // Make API request using the HttpClient
             _httpClient.DefaultRequestHeaders.Add("app_key", _apiKey);
@@ -77,8 +68,7 @@ namespace WebAppServer.Services
 
             if (response.IsSuccessStatusCode)
             {
-                string data = await response.Content.ReadAsStringAsync();
-                return data;
+                return await response.Content.ReadFromJsonAsync<List<Place>>();
             }
             else
             {
